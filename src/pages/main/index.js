@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import api from '../../services/api'
+import './main.css'
 
 const Main = () => {
 
@@ -22,9 +23,15 @@ const Main = () => {
   return(
     <div className='product-list'>
       {products && products.map(product => {
-        const { _id: id, title} = product;
+        const { _id: id, title, description} = product;
 
-        return(<h2 key={id}>{title}</h2>)
+        return(
+          <article key={id}>
+            <strong>{title}</strong>
+            <p>{description}</p>
+            <a href='#'>Access</a>
+          </article>
+        )
       })}
     </div>
   )
