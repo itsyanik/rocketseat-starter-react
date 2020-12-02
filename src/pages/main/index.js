@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import api from '../../services/api'
 
 const Main = () => {
+
+  const [products, setProducts] = useState()
   const loadProducts = async () => {
     const response = await api.get('/products')
-    
-    return response.data
+    const docs = response.data.docs
+
+    if (docs) {
+      setProducts(docs)
+    }
+
+    return docs
   }
 
   useEffect(() => {
@@ -13,8 +20,12 @@ const Main = () => {
   }, [])
 
   return(
-    <div>
-      <h1>Hello Rocketseat</h1>
+    <div className='product-list'>
+      {products && products.map(product => {
+        const { _id: id, title} = product;
+
+        return(<h2 key={id}>{title}</h2>)
+      })}
     </div>
   )
 }
