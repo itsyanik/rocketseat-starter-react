@@ -62,7 +62,7 @@ const Main = () => {
         <button disabled={currentPage === lastPage} onClick={() => nextPage()}>Next</button>
       </div>
     </div>
-  )
+  ) || null
 }
 
 export default Main
