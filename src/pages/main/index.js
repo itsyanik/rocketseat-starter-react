@@ -5,15 +5,38 @@ import './main.css'
 const Main = () => {
 
   const [products, setProducts] = useState()
-  const loadProducts = async () => {
-    const response = await api.get('/products')
-    const docs = response.data.docs
+  const [currentPage, setPage] = useState(1)
+  const [lastPage, setLastPage] = useState()
 
-    if (docs) {
-      setProducts(docs)
+  const loadProducts = async (page = currentPage) => {
+    const response = await api.get(`/products?page=${page}`)
+    const { docs: productData, ...pageInfo } = response.data
+    const { pages } = pageInfo
+
+    if (productData) {
+      setProducts(productData)
+      setLastPage(pages)
     }
 
-    return docs
+    return productData
+  }
+
+  const previousPage = () => {
+    if (currentPage === 1) return
+
+    const previousPage = currentPage - 1
+
+    setPage(previousPage)
+    loadProducts(previousPage)
+  }
+
+  const nextPage = () => {
+    if (currentPage === lastPage) return
+
+    const nextPage = currentPage + 1
+    
+    setPage(nextPage)
+    loadProducts(nextPage)
   }
 
   useEffect(() => {
@@ -33,6 +56,10 @@ const Main = () => {
           </article>
         )
       })}
+      <div className="actions">
+        <button disabled={currentPage === 1} onClick={() => previousPage()}>Previous</button>
+        <button disabled={currentPage === lastPage} onClick={() => nextPage()}>Next</button>
+      </div>
     </div>
   )
 }
