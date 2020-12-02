@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import api from '../../services/api'
+import { Link } from 'react-router-dom'
 import './main.css'
 
 const Main = () => {
@@ -52,7 +53,7 @@ const Main = () => {
           <article key={id}>
             <strong>{title}</strong>
             <p>{description}</p>
-            <a href='#'>Access</a>
+            <Link to={`/products/${id}`}>Access</Link>
           </article>
         )
       })}
