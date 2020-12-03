@@ -3,24 +3,35 @@ import api from '../../services/api'
 import { Link } from 'react-router-dom'
 import './main.css'
 
-const Main = () => {
+interface ProductList {
+  data: {
+    docs: object[],
+    pages: number
+  }
+}
 
-  const [products, setProducts] = useState()
-  const [currentPage, setPage] = useState(1)
+const Main: React.FC = () => {
+
+  const [products, setProducts] = useState<ProductList>()
+  const [currentPage, setPage] = useState<ProductList>(1)
   const [lastPage, setLastPage] = useState()
 
-  const loadProducts = async (page = currentPage) => {
-    const response = await api.get(`/products?page=${page}`)
-    const { docs: productData, ...pageInfo } = response.data
-    const { pages } = pageInfo
-
-    if (productData) {
-      setProducts(productData)
-      setLastPage(pages)
+  useEffect(() => {
+    const loadProducts = async (page = currentPage) => {
+      const response: ProductList = await api.get(`/products?page=${page}`)
+      const { docs: productData, ...pageInfo } = response.data
+      const { pages } = pageInfo
+  
+      if (productData) {
+        setProducts(productData)
+        setLastPage(pages)
+      }
+  
+      return productData
     }
 
-    return productData
-  }
+    loadProducts()
+  }, [currentPage])
 
   const previousPage = () => {
     if (currentPage === 1) return
@@ -28,7 +39,6 @@ const Main = () => {
     const previousPage = currentPage - 1
 
     setPage(previousPage)
-    loadProducts(previousPage)
   }
 
   const nextPage = () => {
@@ -37,12 +47,7 @@ const Main = () => {
     const nextPage = currentPage + 1
     
     setPage(nextPage)
-    loadProducts(nextPage)
   }
-
-  useEffect(() => {
-    loadProducts()
-  }, [])
 
   return(
     <div className='product-list'>
