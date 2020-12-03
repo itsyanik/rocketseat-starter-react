@@ -3,24 +3,29 @@ import { useParams } from 'react-router-dom';
 import api from '../../services/api'
 import './product.css'
 
-const Product = () => {
-  const [product, setProduct] = useState();
-  const { id } = useParams()
-  
-  const loadProduct = async () => {
-    const response = await api.get(`/products/${id}`)
-    const product = response.data
+interface ProductData {
+  product: object
+}
 
-    if (product) {
-      setProduct(product)
+const Product: React.FC = () => {
+
+  const [product, setProduct] = useState<ProductData>();
+  const { id }: any = useParams()
+  
+  useEffect(() => {
+    const loadProduct = async () => {
+      const response = await api.get(`/products/${id}`)
+      const product: ProductData = response.data
+  
+      if (product) {
+        setProduct(product)
+      }
+  
+      return product
     }
 
-    return product
-  }
-
-  useEffect(() => {
     loadProduct()
-  }, [])
+  }, [id])
 
   return (product &&
    (
